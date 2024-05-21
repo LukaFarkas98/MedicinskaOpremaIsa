@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/users")
@@ -26,13 +27,13 @@ public class UserController {
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
         UserDto foundUSer = userService.getUserById(userId);
-        return new ResponseEntity<>(foundUSer, HttpStatus.FOUND);
+        return new ResponseEntity<>(foundUSer, HttpStatus.OK);
 
     }
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers(){
         List<UserDto> allUsers = userService.getAllUsers();
-        return new ResponseEntity<>(allUsers, HttpStatus.FOUND);
+        return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
     @PutMapping("{id}")
