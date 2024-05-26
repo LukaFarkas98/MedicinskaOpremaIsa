@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createUser , getUser} from '../services/userService';
+import { createUser , getUser, updateUser} from '../services/userService';
 import { useNavigate, useParams} from 'react-router-dom';
 
 const UserComponent = () => {
@@ -54,16 +54,27 @@ const UserComponent = () => {
     phone: '',
     profession: ''})
 
-    function saveUser(e) {
+    function saveOrUpdateUser(e) {
         e.preventDefault();
         const user = { firstName, lastName, email, password, city, country, phone, profession};
         console.log(user);
         let valid = validateForm()
-        if(valid){
-            createUser(user).then((response) => {
-                console.log(response.data);
-                navigator('/users');
-            })
+        if(valid){ 
+            if(id){
+                updateUser(id, user).then((response) => {
+                    console.log(response.data)
+                    navigator('/users')
+                }).catch(error => {
+                    console.error(error)
+                })
+            }else{
+                createUser(user).then((response) => {
+                    console.log(response.data);
+                    navigator('/users');
+                }).catch(error => {
+                    console.error(error)
+                })
+            }      
         }else{
 
         }
@@ -94,13 +105,6 @@ const UserComponent = () => {
 
         return valid
     }
-    function addNewUser(){
-        navigator('/add-user')
-      }
-
-      function updateUser(id){
-        navigator(`/edit-user/${id}`)
-      }
       function pageTitleChange(){
         if(id){
             return <h2 className='text-center mt-3'>Update User</h2>
@@ -125,7 +129,7 @@ const UserComponent = () => {
                                     type='text'
                                     name='firstName'
                                     placeholder='Enter User First Name'
-                                    value={firstName}
+                                    defaultValue={firstName}
                                     className= {`form-control ${errors.firstName ? 'is-invalid' : ''}`}
                                     onChange={handleFirstNameChange}
                                   
@@ -138,7 +142,7 @@ const UserComponent = () => {
                                     type='text'
                                     placeholder='Enter User Last Name'
                                     name='lastName'
-                                    value={lastName}
+                                    defaultValue={lastName}
                                     className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
                                     onChange={handleLastNameChange}
                                 />
@@ -150,7 +154,7 @@ const UserComponent = () => {
                                     type='email'
                                     placeholder='Enter User Email'
                                     name='email'
-                                    value={email}
+                                    defaultValue={email}
                                     className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                                     onChange={handleEmailChange}
                                 />
@@ -162,7 +166,7 @@ const UserComponent = () => {
                                     type='password'
                                     placeholder='Enter User Password'
                                     name='password'
-                                    value={password}
+                                    defaultValue={password}
                                     className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                                     onChange={handlePasswordChange}
                                 />
@@ -174,7 +178,7 @@ const UserComponent = () => {
                                     type='text'
                                     placeholder='Enter User City'
                                     name='city'
-                                    value={city}
+                                    defaultValue={city}
                                     className='form-control'
                                     onChange={handleCityChange}
                                 />
@@ -185,7 +189,7 @@ const UserComponent = () => {
                                     type='text'
                                     placeholder='Enter User Country'
                                     name='country'
-                                    value={country}
+                                    defaultValue={country}
                                     className='form-control'
                                     onChange={handleCountryChange}
                                 />
@@ -196,7 +200,7 @@ const UserComponent = () => {
                                     type='text'
                                     placeholder='Enter User Phone'
                                     name='phone'
-                                    value={phone}
+                                    defaultValue={phone}
                                     className='form-control'
                                     onChange={handlePhoneChange}
                                 />
@@ -207,12 +211,12 @@ const UserComponent = () => {
                                     type='text'
                                     placeholder='Enter User Profession'
                                     name='profession'
-                                    value={profession}
+                                    defaultValue={profession}
                                     className='form-control'
                                     onChange={handleProfessionChange}
                                 />
                             </div>
-                            <button className='btn btn-success mt-3' onClick={id ? saveUser : updateUser}>Submit</button>
+                            <button className='btn btn-success mt-3' onClick = {saveOrUpdateUser}>Submit</button>
                         </form>
                     </div>
                 </div>

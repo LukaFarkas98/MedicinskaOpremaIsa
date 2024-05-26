@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFoundException(("User with given id:" + userId + " doesnt exist!!" ))
         );
 
-        foundUser.setId(updatedUser.getId());
         foundUser.setFirstName(updatedUser.getFirstName());
         foundUser.setLastName(updatedUser.getLastName());
         foundUser.setEmail(updatedUser.getEmail());

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { listUsers } from '../services/userService'
+import { deleteUser, listUsers } from '../services/userService'
 import { useNavigate, useParams} from 'react-router-dom'
 const ListUserComponent = () => {
     
@@ -10,20 +10,34 @@ const ListUserComponent = () => {
 
       const {id} = useParams();
       useEffect(() =>{
+        getAllUsers();
+      }, []);
+      
+      function getAllUsers(){
         listUsers().then((response) => {
             console.log('API response:', response.data); 
             setUsers(response.data);
         }).catch(error => {
             console.error(error)
         });
-      }, []);
-      
+      }
+
       function addNewUser(){
         navigator('/add-user')
       }
 
       function updateUser(id){
         navigator(`/edit-user/${id}`)
+      }
+
+      function removeUser(id){
+
+        deleteUser(id).then((response) => {
+            console.log(response.data);
+            getAllUsers();
+        }).catch(error => {
+            console.error(error)
+        });
       }
    
   return (
@@ -60,6 +74,7 @@ const ListUserComponent = () => {
                     <td>{user.profession}</td>
                     <td>
                         <button className='btn btn-info' onClick = {() => updateUser(user.id)}>Update</button>
+                        <button className='btn btn-danger' onClick = {() => removeUser(user.id)} style={{marginLeft: '10px'}}>Delete</button>
                     </td>
                 </tr>)
             }
