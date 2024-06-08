@@ -1,6 +1,5 @@
 package LukaFarkas.MedOpremaBackend.entity;
 
-import LukaFarkas.MedOpremaBackend.dto.EquipmentDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,11 +30,14 @@ public class Appointment {
     private Company company;
 
 
-    @ElementCollection
-    @CollectionTable(name = "appointment_times",
-            joinColumns = @JoinColumn(name = "appointment_id"))
-    @Column(name = "time_slot")
-    private List<LocalDateTime> timeSlots;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "timeslot_id", nullable = false)
+    private TimeSlot timeSlot;
+
 
 
 }

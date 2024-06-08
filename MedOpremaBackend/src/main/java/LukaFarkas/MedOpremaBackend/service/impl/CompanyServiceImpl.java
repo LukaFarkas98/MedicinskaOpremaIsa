@@ -22,6 +22,8 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
 
+    private CompanyMapper companyMapper;
+
     @Override
     public CompanyDto createCompany(CompanyDto companyDto) {
         Company company = CompanyMapper.toEntity(companyDto);
@@ -47,5 +49,12 @@ public class CompanyServiceImpl implements CompanyService {
         return company.getEquipment().stream()
                 .map(EquipmentMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Company findById(Long companyId) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new ResourceNotFoundException("Company not found"));
+        return company;
     }
 }

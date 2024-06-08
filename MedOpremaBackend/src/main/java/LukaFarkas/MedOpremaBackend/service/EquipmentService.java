@@ -1,5 +1,7 @@
 package LukaFarkas.MedOpremaBackend.service;
 
-public interface EquipmentService {
+import LukaFarkas.MedOpremaBackend.entity.Equipment;
 
+public interface EquipmentService {
+    Equipment findById(Long equipmentId);
 }

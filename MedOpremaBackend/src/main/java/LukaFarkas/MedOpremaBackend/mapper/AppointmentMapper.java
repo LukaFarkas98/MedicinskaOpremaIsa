@@ -1,9 +1,7 @@
 package LukaFarkas.MedOpremaBackend.mapper;
 
 import LukaFarkas.MedOpremaBackend.dto.AppointmentDto;
-import LukaFarkas.MedOpremaBackend.entity.Appointment;
-import LukaFarkas.MedOpremaBackend.entity.Company;
-import LukaFarkas.MedOpremaBackend.entity.Equipment;
+import LukaFarkas.MedOpremaBackend.entity.*;
 
 public class AppointmentMapper {
 
@@ -15,19 +13,18 @@ public class AppointmentMapper {
                 appointment.getAppointment_id(),
                 appointment.getEquipment().getEquipment_id(),
                 appointment.getCompany().getCompany_id(),
-                appointment.getTimeSlots()
+                appointment.getUser().getId(),
+                appointment.getTimeSlot().getId()
         );
     }
 
-    public static Appointment toEntity(AppointmentDto appointmentDto, Equipment equipment, Company company){
-        if (appointmentDto == null)
-            return null;
-        Appointment appointment = new Appointment();
-        appointment.setAppointment_id(appointmentDto.getAppointmentId());
-        appointment.setEquipment(equipment);
-        appointment.setCompany(company);
-        appointment.setTimeSlots(appointmentDto.getTimeSlots());
-
-        return appointment;
+    public static Appointment toEntity(AppointmentDto appointmentDto, Equipment equipment, Company company, User user,  TimeSlot timeSlot){
+        return new Appointment(
+                appointmentDto.getAppointmentId(),
+                equipment,
+                company,
+                user,
+                timeSlot
+        );
     }
 }
