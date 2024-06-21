@@ -24,6 +24,12 @@ public class UserController {
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> RegisterUser(@RequestBody  UserDto userDto){
+        UserDto savedUser = userService.createUser(userDto);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
         UserDto foundUSer = userService.getUserById(userId);

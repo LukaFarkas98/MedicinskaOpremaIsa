@@ -29,6 +29,7 @@ const UserComponent = () => {
                 setCountry(response.data.country);
                 setPhone(response.data.phone);
                 setProfession(response.data.profession);
+                
             }).catch(error => {
                 console.error(error);
             })

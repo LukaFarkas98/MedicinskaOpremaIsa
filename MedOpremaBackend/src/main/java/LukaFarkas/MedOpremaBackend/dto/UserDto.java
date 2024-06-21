@@ -1,9 +1,12 @@
 package LukaFarkas.MedOpremaBackend.dto;
 
+import LukaFarkas.MedOpremaBackend.entity.PenalPoint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,4 +22,5 @@ public class UserDto {
     private String country;
     private String phone;
     private String profession;
+    private List<PenalPointDto> penalPoints;
 }

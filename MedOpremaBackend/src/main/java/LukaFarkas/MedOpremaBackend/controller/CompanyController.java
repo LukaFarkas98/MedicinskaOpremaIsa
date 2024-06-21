@@ -19,6 +19,14 @@ public class CompanyController {
     private final CompanyRepository companyRepository;
     private CompanyService companyService;
 
+
+    @GetMapping
+    public ResponseEntity<List<CompanyDto>> getAllCompanies() {
+        List<CompanyDto> companies = companyService.getAllCompanies();
+        return new ResponseEntity<>(companies, HttpStatus.OK);
+    }
+
+
     @PostMapping
     public ResponseEntity<List<CompanyDto>> createCompanies(@RequestBody List<CompanyDto> companyDtos){
         List<CompanyDto> savedCompanies = companyService.createCompanies(companyDtos);

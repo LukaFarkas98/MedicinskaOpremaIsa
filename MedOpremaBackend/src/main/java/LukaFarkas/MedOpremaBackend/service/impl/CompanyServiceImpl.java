@@ -57,4 +57,10 @@ public class CompanyServiceImpl implements CompanyService {
                 .orElseThrow(() -> new ResourceNotFoundException("Company not found"));
         return company;
     }
+
+
+    public List<CompanyDto> getAllCompanies() {
+        List<Company> companies = companyRepository.findAll();
+        return companies.stream().map(CompanyMapper::toDTO).collect(Collectors.toList());
+    }
 }

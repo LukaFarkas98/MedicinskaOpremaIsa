@@ -12,4 +12,8 @@ public interface AppointmentService {
     AppointmentDto createAppointment(AppointmentDto appointmentDto) throws MessagingException, jakarta.mail.MessagingException, IOException, WriterException;
 
     List<AppointmentDto> getAppointmentsByCompanyId(Long companyId);
+
+    void cancelAppointment(Long appointmentId, Long userId);
+
+    public List<AppointmentDto> getAllAppointmentsByUserId(Long userId);
 }

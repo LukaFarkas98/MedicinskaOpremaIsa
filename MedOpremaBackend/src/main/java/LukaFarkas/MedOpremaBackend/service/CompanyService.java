@@ -14,4 +14,6 @@ public interface CompanyService {
     List<EquipmentDto> getAllEquipmentByCompanyId(Long companyId);
 
     Company findById(Long companyId);
+
+    List<CompanyDto> getAllCompanies();
 }

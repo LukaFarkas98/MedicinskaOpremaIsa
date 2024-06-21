@@ -32,4 +32,9 @@ public class TimeSlot {
     @JoinColumn(name = "equipment_id", nullable = false)
     private Equipment equipment;
 
+    public TimeSlot(LocalDateTime parse, LocalDateTime parse1, Equipment equipment) {
+        this.startTime = parse;
+        this.endTime = parse1;
+        this.equipment = equipment;
+    }
 }

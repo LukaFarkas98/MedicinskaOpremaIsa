@@ -26,6 +26,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         User user = UserMapper.mapToUser(userDto);
+        if (userDto.getEmail() == null || userDto.getPassword() == null) {
+            throw new RuntimeException("Email already exists");
+        }
+        if(userRepository.findByEmail(userDto.getEmail()).isPresent()){
+            throw new RuntimeException("Email already exists");
+        }
         User savedUser = userRepository.save(user);
         return UserMapper.mapToUserDto(savedUser);
     }
