@@ -1,5 +1,6 @@
 package LukaFarkas.MedOpremaBackend.util;
 
+import LukaFarkas.MedOpremaBackend.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,7 @@ public class JwtResponse implements Serializable {
     private static final long serialVersionUID = -8091879091924046844L;
 
     private  String token;
+
+    private User user;
 
 }

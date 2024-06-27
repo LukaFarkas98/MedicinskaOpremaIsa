@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
         if (userDto.getEmail() == null || userDto.getPassword() == null) {
             throw new RuntimeException("Email already exists");
         }
-        if(userRepository.findByEmail(userDto.getEmail()).isPresent()){
+        if(userRepository.findByEmail(userDto.getEmail()) != null){
             throw new RuntimeException("Email already exists");
         }
         User savedUser = userRepository.save(user);

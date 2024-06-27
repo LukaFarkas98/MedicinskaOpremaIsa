@@ -9,9 +9,9 @@ import AuthProvider from './authentication/AuthProvider';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+
     <AuthProvider>
       <App />
     </AuthProvider>,
-  </React.StrictMode>,
+
 )

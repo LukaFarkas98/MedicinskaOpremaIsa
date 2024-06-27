@@ -17,7 +17,6 @@ function App() {
       <div className='content'>
         <Routes>
             <Route path='/' element={<CompanyListComponent />} />
-            <Route path='/companies' element={<CompanyListComponent />} />
             <Route path='/companies/:companyId/equipment' element={<EquipmentListComponent />} />
             {/* //http://localhost:3000 /users */}
             <Route path = '/users' element = {<ListUserComponent/>} ></Route>

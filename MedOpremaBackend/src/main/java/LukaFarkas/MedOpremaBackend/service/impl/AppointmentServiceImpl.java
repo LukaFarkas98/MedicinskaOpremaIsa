@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,16 +56,20 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (existingAppointment.isPresent()) {
             return null;
         }else{
-            Company company = companyService.findById(appointmentDto.getCompanyId());
-            Equipment equipment = equipmentService.findById(appointmentDto.getEquipmentId());
-            User user = UserMapper.mapToUser(userService.getUserById(appointmentDto.getUserId()));
+            Appointment appointment = new Appointment();
+            appointment.setCompany(companyService.findById(appointmentDto.getCompanyId()));
+            appointment.setEquipment(equipmentService.findById(appointmentDto.getEquipmentId()));
+            appointment.setUser(UserMapper.mapToUser(userService.getUserById(appointmentDto.getUserId())));
             TimeSlotDto timeSlot = timeSlotService.findById(appointmentDto.getTimeSlotId());
-            Appointment appointment = new Appointment(appointmentDto.getAppointmentId(), equipment, company, user, TimeSlotMapper.toEntity(timeSlot, equipment));
+            appointment.setTimeSlot(TimeSlotMapper.toEntity(timeSlot, appointment.getEquipment()));
+           // Appointment appointment = new Appointment(id, equipment, company, user, TimeSlotMapper.toEntity(timeSlot, equipment));
             //sacuvaj appointment u bazu i vrati ga natrag
             return AppointmentMapper.toDto(appointmentRepository.save(appointment));
         }
 
     }
+
+
 
     @Override
     public List<AppointmentDto> getAppointmentsByCompanyId(Long companyId) {
@@ -73,6 +78,17 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .map(AppointmentMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    private Long generateUniqueAppointmentId() {
+        Random random = new Random();
+        Long id;
+        do {
+            id = (long) random.nextInt(Integer.MAX_VALUE);  // Generate a random ID
+        } while (appointmentRepository.existsById(id));   // Check if the ID already exists
+        return id;
+    }
+
+
 
     @Transactional
     public void cancelAppointment(Long appointmentId, Long userId) {

@@ -16,6 +16,7 @@ const AuthProvider = ({ children }) => {
       user
     });
     localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
   };
 
   const logout = () => {
@@ -25,6 +26,7 @@ const AuthProvider = ({ children }) => {
       user: null
     });
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   };
 
   return (

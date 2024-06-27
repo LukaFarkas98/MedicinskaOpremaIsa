@@ -1,40 +1,48 @@
 package LukaFarkas.MedOpremaBackend.controller;
 
+import LukaFarkas.MedOpremaBackend.entity.User;
+import LukaFarkas.MedOpremaBackend.repository.UserRepository;
+import LukaFarkas.MedOpremaBackend.service.AuthService;
 import LukaFarkas.MedOpremaBackend.service.impl.CustomUserDetailsService;
 import LukaFarkas.MedOpremaBackend.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class AuthenticationController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private AuthService authService;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private UserDetailsService userDetailsService;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private UserRepository userRepository;
 
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        int a = 1 + 2;
+        String token = authService.authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+
+        if (token != null) {
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+            final String jwt = JwtUtil.generateToken(userDetails);
+
+            User user = userRepository.findByEmail(authenticationRequest.getEmail());
+            return ResponseEntity.ok(new JwtResponse(jwt, user));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }
