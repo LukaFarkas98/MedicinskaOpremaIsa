@@ -1,8 +1,12 @@
 package LukaFarkas.MedOpremaBackend.controller;
 
 import LukaFarkas.MedOpremaBackend.dto.AppointmentDto;
+import LukaFarkas.MedOpremaBackend.dto.EquipmentDto;
+import LukaFarkas.MedOpremaBackend.dto.TimeSlotDto;
 import LukaFarkas.MedOpremaBackend.entity.Appointment;
+import LukaFarkas.MedOpremaBackend.entity.TimeSlot;
 import LukaFarkas.MedOpremaBackend.service.AppointmentService;
+import LukaFarkas.MedOpremaBackend.service.EquipmentService;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +25,8 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-
+    @Autowired
+    private EquipmentService equipmentService;
 
     @GetMapping("/{companyId}")
     public ResponseEntity<List<AppointmentDto>> getAppointmentsByCompanyId(@PathVariable Long companyId){
@@ -39,6 +44,16 @@ public class AppointmentController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(newAppointment);
     }
+
+    @GetMapping("/by-appointment/{appointmentId}")
+    public ResponseEntity<EquipmentDto> getEquipmentDtoByAppointmentId(@PathVariable Long appointmentId) {
+        EquipmentDto equipmentDto = equipmentService.getEquipmentDtoByAppointmentId(appointmentId);
+        if (equipmentDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(equipmentDto);
+    }
+
 
     @DeleteMapping("/{appointmentId}")
     public ResponseEntity<Void> cancelAppointment(@PathVariable Long appointmentId, @RequestParam Long userId) {

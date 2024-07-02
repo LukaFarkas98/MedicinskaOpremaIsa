@@ -12,7 +12,8 @@ public class TimeSlotMapper {
                 timeSlot.getId(),
                 timeSlot.getStartTime().toString(),
                 timeSlot.getEndTime().toString(),
-                timeSlot.getEquipment().getEquipment_id()
+                timeSlot.getEquipment().getEquipment_id(),
+                timeSlot.isBooked()
         );
     }
 
@@ -21,7 +22,8 @@ public class TimeSlotMapper {
                 timeSlotDTO.getId(),
                 LocalDateTime.parse(timeSlotDTO.getStartTime()),
                 LocalDateTime.parse(timeSlotDTO.getEndTime()),
-                equipment
+                equipment,
+                timeSlotDTO.isBooked()
         );
     }
 }

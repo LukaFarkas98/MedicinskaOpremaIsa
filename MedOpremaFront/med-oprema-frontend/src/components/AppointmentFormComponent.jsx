@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../authentication/AuthProvider';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const AppointmentFormComponent = ({ companyId,equipmentId, userId, onAppointmentScheduled }) => {
     const { auth } = useContext(AuthContext);
@@ -23,6 +26,7 @@ const AppointmentFormComponent = ({ companyId,equipmentId, userId, onAppointment
     const handleSchedule = async () => {
         if (!selectedTimeslot) {
             alert('Please select a timeslot');
+            //toast.alert('Error scheduling appointment:!');
             return;
         }
 
@@ -32,10 +36,11 @@ const AppointmentFormComponent = ({ companyId,equipmentId, userId, onAppointment
                 { equipmentId,  companyId, userId, timeSlotId: selectedTimeslot.id },
                 { headers: { Authorization: `Bearer ${auth.token}` } }
             );
-            alert('Appointment scheduled successfully');
+            toast.success('Appointment scheduled successfully!');
             onAppointmentScheduled();
         } catch (error) {
             console.error('Error scheduling appointment:', error);
+            toast.error('Error scheduling appointment:!');
         }
     };
 

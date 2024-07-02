@@ -8,6 +8,8 @@ import LoginComponent from './components/LoginComponent';
 import RegisterComponent from './components/RegisterComponent';
 import CompanyListComponent from './components/CompanyListcomponent';
 import EquipmentListComponent from './components/EquipmentListComponent';
+import UserAppointmentsComponent from './components/UserAppointmentsComponent';
+import UserPenalPointsComponent from './components/UserPenalPoints'
 function App() {
   return (
     <>
@@ -26,6 +28,8 @@ function App() {
             <Route path = '/edit-user/:id' element = {<UserComponent/>}></Route>
             <Route path='/login' element={<LoginComponent />} />
             <Route path='/register' element={<RegisterComponent />} />
+            <Route path="/appointments" element={<UserAppointmentsComponent />} />
+            <Route path="/penalpoints" element={<UserPenalPointsComponent />} /> {/* New Route */}
         </Routes>
       </div>
       <FooterComponent/>

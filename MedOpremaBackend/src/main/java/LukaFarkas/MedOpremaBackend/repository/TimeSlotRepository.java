@@ -21,4 +21,6 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 
     @Query("SELECT ts FROM TimeSlot ts WHERE ts.equipment.equipment_id = :equipmentId")
     List<TimeSlot> findAllByEquipmentId(@Param("equipmentId") Long equipmentId);
+
+
 }

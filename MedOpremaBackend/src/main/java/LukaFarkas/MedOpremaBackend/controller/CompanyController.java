@@ -2,6 +2,8 @@ package LukaFarkas.MedOpremaBackend.controller;
 
 import LukaFarkas.MedOpremaBackend.dto.CompanyDto;
 import LukaFarkas.MedOpremaBackend.dto.EquipmentDto;
+import LukaFarkas.MedOpremaBackend.entity.TimeSlot;
+import LukaFarkas.MedOpremaBackend.mapper.CompanyMapper;
 import LukaFarkas.MedOpremaBackend.repository.CompanyRepository;
 import LukaFarkas.MedOpremaBackend.service.CompanyService;
 import lombok.AllArgsConstructor;
@@ -26,7 +28,11 @@ public class CompanyController {
         return new ResponseEntity<>(companies, HttpStatus.OK);
     }
 
-    
+    @GetMapping("{companyId}")
+    public ResponseEntity<CompanyDto> getCompanyById(@PathVariable Long companyId){
+        CompanyDto company = CompanyMapper.toDTO(companyService.findById(companyId));
+        return new ResponseEntity<>(company, HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<List<CompanyDto>> createCompanies(@RequestBody List<CompanyDto> companyDtos){

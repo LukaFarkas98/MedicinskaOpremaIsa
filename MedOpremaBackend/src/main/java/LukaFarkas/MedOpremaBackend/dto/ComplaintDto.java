@@ -11,10 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComplaintDto {
-    private Long id;
     private Long userId;
     private Long companyId;
-    private Complaint.ComplaintType complaintType;
-    private String complaintText;
-    private LocalDateTime timestamp;
+    private Long adminId;
+    private String details;
+
+    // Getters and Setters
 }
+

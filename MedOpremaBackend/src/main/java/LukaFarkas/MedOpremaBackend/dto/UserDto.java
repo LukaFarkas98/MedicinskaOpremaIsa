@@ -1,6 +1,7 @@
 package LukaFarkas.MedOpremaBackend.dto;
 
 import LukaFarkas.MedOpremaBackend.entity.PenalPoint;
+import LukaFarkas.MedOpremaBackend.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,6 @@ public class UserDto {
     private String country;
     private String phone;
     private String profession;
+    private User.UserRole role;
     private List<PenalPointDto> penalPoints;
 }

@@ -32,6 +32,9 @@ public class TimeSlot {
     @JoinColumn(name = "equipment_id", nullable = false)
     private Equipment equipment;
 
+    @Column(name = "booked", nullable = false)
+    private boolean booked = false;
+
     public TimeSlot(LocalDateTime parse, LocalDateTime parse1, Equipment equipment) {
         this.startTime = parse;
         this.endTime = parse1;

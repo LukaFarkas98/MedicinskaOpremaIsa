@@ -46,12 +46,21 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private PenalPointRepository penalPointRepository;
 
+    @Autowired
+    private TimeSlotRepository timeSlotRepository;
+
 
     @Override
     public AppointmentDto createAppointment(AppointmentDto appointmentDto) throws MessagingException, jakarta.mail.MessagingException, IOException, WriterException {
 
         Optional<Appointment> existingAppointment = appointmentRepository.findByEquipmentAndTimeSlotAndCompany(
                 appointmentDto.getEquipmentId(), appointmentDto.getTimeSlotId(), appointmentDto.getCompanyId());
+
+        TimeSlot timeSlot = timeSlotRepository.findById(appointmentDto.getTimeSlotId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid time slot ID"));
+
+        if(timeSlot.isBooked())
+            return null;
 
         if (existingAppointment.isPresent()) {
             return null;
@@ -60,8 +69,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             appointment.setCompany(companyService.findById(appointmentDto.getCompanyId()));
             appointment.setEquipment(equipmentService.findById(appointmentDto.getEquipmentId()));
             appointment.setUser(UserMapper.mapToUser(userService.getUserById(appointmentDto.getUserId())));
-            TimeSlotDto timeSlot = timeSlotService.findById(appointmentDto.getTimeSlotId());
-            appointment.setTimeSlot(TimeSlotMapper.toEntity(timeSlot, appointment.getEquipment()));
+            TimeSlotDto timeSlot1 = timeSlotService.findById(appointmentDto.getTimeSlotId());
+            appointment.setTimeSlot(TimeSlotMapper.toEntity(timeSlot1, appointment.getEquipment()));
+
+            //sacuvamo da je bukiran timeslot taj
+            timeSlot.setBooked(true);
+            timeSlotRepository.save(timeSlot);
            // Appointment appointment = new Appointment(id, equipment, company, user, TimeSlotMapper.toEntity(timeSlot, equipment));
             //sacuvaj appointment u bazu i vrati ga natrag
             return AppointmentMapper.toDto(appointmentRepository.save(appointment));
@@ -79,16 +92,13 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .collect(Collectors.toList());
     }
 
-    private Long generateUniqueAppointmentId() {
-        Random random = new Random();
-        Long id;
-        do {
-            id = (long) random.nextInt(Integer.MAX_VALUE);  // Generate a random ID
-        } while (appointmentRepository.existsById(id));   // Check if the ID already exists
-        return id;
+
+    public TimeSlot getTimeSlotForAppointment(Long appointmentId){
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new IllegalStateException("Appointment not found"));
+
+        return appointment.getTimeSlot();
     }
-
-
 
     @Transactional
     public void cancelAppointment(Long appointmentId, Long userId) {
@@ -98,6 +108,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime appointmentTime = appointment.getTimeSlot().getStartTime();
         long hoursDifference = ChronoUnit.HOURS.between(now, appointmentTime);
+
+        TimeSlot timeSlot = appointment.getTimeSlot();
+        timeSlot.setBooked(false);
+        timeSlotRepository.save(timeSlot);
 
         User user = appointment.getUser();
         int points = hoursDifference >= 24 ? 2 : 1; // poen ako manje od 24h a 2 ako vise

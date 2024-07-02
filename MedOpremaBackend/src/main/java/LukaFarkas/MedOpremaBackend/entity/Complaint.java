@@ -6,13 +6,6 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Complaint {
-
-    public enum ComplaintType {
-        SERVICE_QUALITY,
-        EQUIPMENT_ISSUE,
-        BILLING_PROBLEM,
-        OTHER
-    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,29 +15,18 @@ public class Complaint {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id", nullable = true)
     private Company company;
 
-    @Enumerated(EnumType.STRING)
-    private ComplaintType complaintType;
+    @ManyToOne
+    @JoinColumn(name = "admin_id", nullable = true)
+    private User admin; // Assuming admin is a type of User
 
     @Column(nullable = false)
-    private String complaintText;
+    private String details;
 
-    private LocalDateTime timestamp;
-
-    public Complaint() {}
-
-    public Complaint(User user, Company company, ComplaintType complaintType, String complaintText, LocalDateTime timestamp) {
-        this.user = user;
-        this.company = company;
-        this.complaintType = complaintType;
-        this.complaintText = complaintText;
-        this.timestamp = timestamp;
-    }
-
+    @Column(nullable = false)
+    private LocalDateTime date;
 
     // Getters and Setters
 }
-
-

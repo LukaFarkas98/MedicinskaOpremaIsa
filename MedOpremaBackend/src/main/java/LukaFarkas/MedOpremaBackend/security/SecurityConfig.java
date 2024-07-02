@@ -41,7 +41,17 @@ public class SecurityConfig {
 
             http
                     .authorizeRequests()
-                    .requestMatchers("api/equipment/{id}/timeslots","api/appointments","/api/login", "/api/companies","api/users", "api/companies/{id}/equipment").permitAll()
+                    .requestMatchers("/api/penal-points/user/{userId}",
+                            "api/appointments/{appointmentId}",
+                            "/api/timeslots/{timeSlotId}",
+                            "api/equipment/{id}/timeslots",
+                            "api/appointments",
+                            "/api/login",
+                            "/api/companies",
+                            "api/users",
+                            "api/companies/{id}/equipment",
+                            "/api/timeslots",
+                            "/api/appointments/by-appointment/{appointmentId}").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .csrf().disable()

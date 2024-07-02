@@ -25,8 +25,7 @@ public class Company {
     @Column(name = "address")
     private String address;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_company_id", referencedColumnName = "company_id")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Equipment> equipment;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)

@@ -17,4 +17,9 @@ public interface TimeSlotService {
     public List<TimeSlotDto> getAvailableTimeSlotsByEquipmentId(Long equipmentId);
 
     public List<TimeSlotDto> createTimeSlots(List<TimeSlotDto> timeSlotDtos);
+
+
+    public List<TimeSlotDto> findAvailableTimeSlotsByEquipmentId(Long equipmentId);
+
+    public TimeSlotDto getTimeSlot(Long id);
 }

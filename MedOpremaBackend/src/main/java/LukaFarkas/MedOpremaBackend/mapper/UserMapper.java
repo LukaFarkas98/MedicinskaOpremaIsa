@@ -18,6 +18,7 @@ public class UserMapper {
                 user.getCountry(),
                 user.getPhone(),
                 user.getProfession(),
+                user.getRole(),// Add this line
                 PenalPointMapper.toDtoList(user.getPenalPoints())
         );
     }
@@ -32,6 +33,7 @@ public class UserMapper {
         user.setPhone(userDto.getPhone());
         user.setCountry(userDto.getCountry());
         user.setPassword(userDto.getPassword());
+        userDto.setRole(user.getRole());
         List<PenalPoint> penalPoints = PenalPointMapper.toEntityList(userDto.getPenalPoints(), user);
         user.setPenalPoints(penalPoints);
         return user;

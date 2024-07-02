@@ -28,6 +28,8 @@ const HeaderComponent = () => {
                 <li className="nav-item">
                   <Link className="nav-link" to="/register">Register</Link>
                 </li>
+                <li><Link className="nav-link" to="/appointments">My Appointments</Link></li>
+                <li><Link className="nav-link" to="/penalpoints">Penal Points</Link></li> {/* New Link */}
               </ul>
             </div>
           </div>

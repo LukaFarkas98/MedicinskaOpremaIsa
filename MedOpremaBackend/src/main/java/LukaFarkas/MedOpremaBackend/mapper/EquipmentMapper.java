@@ -13,7 +13,8 @@ public class EquipmentMapper {
         return new EquipmentDto(
                 equipment.getEquipment_id(),
                 equipment.getEquipment_name(),
-                equipment.getEquipment_type()
+                equipment.getEquipment_type(),
+                equipment.getCompany().getCompany_id()
         );
     }
 

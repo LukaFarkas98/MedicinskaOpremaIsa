@@ -25,4 +25,8 @@ public class Equipment {
 
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL)
     private List<Appointment> appointments;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 }

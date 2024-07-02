@@ -13,5 +13,6 @@ public class EquipmentDto {
     private Long equipmentId;
     private String equipmentName;
     private String equipmentType;
+    private Long companyId;
     // Add other fields as necessary
 }

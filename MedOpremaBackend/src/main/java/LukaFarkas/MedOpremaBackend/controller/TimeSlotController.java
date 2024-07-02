@@ -1,6 +1,7 @@
 package LukaFarkas.MedOpremaBackend.controller;
 
 import LukaFarkas.MedOpremaBackend.dto.TimeSlotDto;
+import LukaFarkas.MedOpremaBackend.service.EquipmentService;
 import LukaFarkas.MedOpremaBackend.service.TimeSlotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,8 @@ public class TimeSlotController {
     @Autowired
     private TimeSlotService timeSlotService;
 
-
+    @Autowired
+    private EquipmentService equipmentService;
 
     @PostMapping("timeslots/bulk")
     public ResponseEntity<List<TimeSlotDto>> createTimeSlots(@RequestBody List<TimeSlotDto> timeSlotDtos) {
@@ -32,8 +34,19 @@ public class TimeSlotController {
 
     @GetMapping("/available/{equipmentId}")
     public ResponseEntity<List<TimeSlotDto>> getAvailableTimeSlots(@PathVariable Long equipmentId) {
-        List<TimeSlotDto> availableTimeSlots = timeSlotService.getAvailableTimeSlotsByEquipmentId(equipmentId);
+        List<TimeSlotDto> availableTimeSlots = timeSlotService.findAvailableTimeSlotsByEquipmentId(equipmentId);
         return ResponseEntity.ok(availableTimeSlots);
     }
+
+    @GetMapping("/timeslots/{id}")
+    public ResponseEntity<TimeSlotDto> getTimeSlot(@PathVariable Long id) {
+        TimeSlotDto timeSlotDto = timeSlotService.getTimeSlot(id);
+        if(timeSlotDto != null){
+            return ResponseEntity.ok(timeSlotDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

@@ -14,7 +14,14 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "Users")
+
 public class User {
+    public enum UserRole {
+        ADMIN,
+        REGISTERED_USER,
+        COMPANY_ADMIN,
+        UNREGISTERED_USER
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,6 +41,10 @@ public class User {
     private String phone;
     @Column(name = "profession")
     private String profession;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private UserRole role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PenalPoint> penalPoints;

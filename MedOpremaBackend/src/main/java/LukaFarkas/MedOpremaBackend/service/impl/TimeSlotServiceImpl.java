@@ -10,11 +10,16 @@ import LukaFarkas.MedOpremaBackend.service.EquipmentService;
 import LukaFarkas.MedOpremaBackend.service.TimeSlotService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 @Service
 public class TimeSlotServiceImpl implements TimeSlotService{
@@ -56,7 +61,7 @@ public class TimeSlotServiceImpl implements TimeSlotService{
     public List<TimeSlotDto> getAvailableTimeSlotsByEquipmentId(Long equipmentId) {
         List<TimeSlot> timeSlots = timeSlotRepository.findAllByEquipmentId(equipmentId);
         return timeSlots.stream()
-                .map(timeSlot -> new TimeSlotDto(timeSlot.getId(), timeSlot.getStartTime().toString(), timeSlot.getEndTime().toString(), timeSlot.getEquipment().getEquipment_id()))
+                .map(timeSlot -> new TimeSlotDto(timeSlot.getId(), timeSlot.getStartTime().toString(), timeSlot.getEndTime().toString(), timeSlot.getEquipment().getEquipment_id(), timeSlot.isBooked()))
                 .collect(Collectors.toList());
     }
 
@@ -72,8 +77,29 @@ public class TimeSlotServiceImpl implements TimeSlotService{
                 .collect(Collectors.toList());
         timeSlots = timeSlotRepository.saveAll(timeSlots);
         return timeSlots.stream()
-                .map(timeSlot -> new TimeSlotDto(timeSlot.getId(), timeSlot.getStartTime().toString(), timeSlot.getEndTime().toString(), timeSlot.getEquipment().getEquipment_id()))
+                .map(timeSlot -> new TimeSlotDto(timeSlot.getId(), timeSlot.getStartTime().toString(), timeSlot.getEndTime().toString(), timeSlot.getEquipment().getEquipment_id(), timeSlot.isBooked()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TimeSlotDto> findAvailableTimeSlotsByEquipmentId(Long equipmentId) {
+        List<TimeSlot> timeSlots = timeSlotRepository.findAllByEquipmentId(equipmentId);
+        return timeSlots.stream()
+                .filter(timeSlot -> !timeSlot.isBooked())
+                .map(timeSlot -> new TimeSlotDto(timeSlot.getId(), timeSlot.getStartTime().toString(), timeSlot.getEndTime().toString(), timeSlot.getEquipment().getEquipment_id(), timeSlot.isBooked()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public TimeSlotDto getTimeSlot(Long id) {
+        Optional<TimeSlot> timeSlot = timeSlotRepository.findById(id);
+        if (timeSlot.isPresent()) {
+            TimeSlot ts = timeSlot.get();
+            TimeSlotDto dto = new TimeSlotDto(ts.getId(), ts.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), ts.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), ts.getEquipment().getEquipment_id(), ts.isBooked());
+            return dto;
+        } else {
+            return null;
+        }
     }
 
 
