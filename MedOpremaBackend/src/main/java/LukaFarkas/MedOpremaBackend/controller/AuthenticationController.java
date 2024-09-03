@@ -1,6 +1,8 @@
 package LukaFarkas.MedOpremaBackend.controller;
 
+import LukaFarkas.MedOpremaBackend.dto.UserDto;
 import LukaFarkas.MedOpremaBackend.entity.User;
+import LukaFarkas.MedOpremaBackend.mapper.UserMapper;
 import LukaFarkas.MedOpremaBackend.repository.UserRepository;
 import LukaFarkas.MedOpremaBackend.service.AuthService;
 import LukaFarkas.MedOpremaBackend.service.impl.CustomUserDetailsService;
@@ -40,6 +42,7 @@ public class AuthenticationController {
             final String jwt = JwtUtil.generateToken(userDetails);
 
             User user = userRepository.findByEmail(authenticationRequest.getEmail());
+            UserDto userDto = UserMapper.mapToUserDto(user);
             return ResponseEntity.ok(new JwtResponse(jwt, user));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

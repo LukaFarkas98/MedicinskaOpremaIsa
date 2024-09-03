@@ -18,8 +18,9 @@ import java.util.List;
 @Table(name = "Companies")
 public class Company {
     @Id
+    @Column(name = "company_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long company_id;
+    private Long id;
     @Column(name = "company_name")
     private String companyName;
     @Column(name = "address")

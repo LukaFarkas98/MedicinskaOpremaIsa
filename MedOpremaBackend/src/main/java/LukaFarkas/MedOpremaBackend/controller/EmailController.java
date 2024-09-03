@@ -65,7 +65,8 @@ public class EmailController {
                     equipment,
                     company,
                     UserMapper.mapToUser(userDto),
-                    TimeSlotMapper.toEntity(timeslot, equipment)
+                    TimeSlotMapper.toEntity(timeslot, equipment),
+                    appointmentDTO.getQuantity()
             );
 
             // Send appointment confirmation email

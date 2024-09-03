@@ -10,6 +10,8 @@ import CompanyListComponent from './components/CompanyListcomponent';
 import EquipmentListComponent from './components/EquipmentListComponent';
 import UserAppointmentsComponent from './components/UserAppointmentsComponent';
 import UserPenalPointsComponent from './components/UserPenalPoints'
+import ComplaintForm from './components/ComplaintFormComponent'
+import ComplaintHistory from './components/ComplaintHistory';
 function App() {
   return (
     <>
@@ -30,6 +32,8 @@ function App() {
             <Route path='/register' element={<RegisterComponent />} />
             <Route path="/appointments" element={<UserAppointmentsComponent />} />
             <Route path="/penalpoints" element={<UserPenalPointsComponent />} /> {/* New Route */}
+            <Route path="/submit-complaint/:companyId" element={<ComplaintForm/>} />
+            <Route path="/complaints" element={<ComplaintHistory/>}/>
         </Routes>
       </div>
       <FooterComponent/>

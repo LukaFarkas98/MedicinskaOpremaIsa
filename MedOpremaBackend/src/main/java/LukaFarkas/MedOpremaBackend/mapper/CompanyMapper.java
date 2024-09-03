@@ -20,7 +20,7 @@ public class CompanyMapper {
                 .collect(Collectors.toList());
 
         return new CompanyDto(
-                company.getCompany_id(),
+                company.getId(),
                 company.getCompanyName(),
                 company.getAddress(),
                 equipmentDTOs
@@ -37,7 +37,7 @@ public class CompanyMapper {
                 .collect(Collectors.toList());
 
         Company company = new Company();
-        company.setCompany_id(companyDTO.getId());
+        company.setId(companyDTO.getId());
         company.setCompanyName(companyDTO.getCompanyName());
         company.setAddress(companyDTO.getAddress());
         company.setEquipment(equipments);

@@ -4,11 +4,11 @@ import { AuthContext } from '../authentication/AuthProvider';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-const AppointmentFormComponent = ({ companyId,equipmentId, userId, onAppointmentScheduled }) => {
+const AppointmentFormComponent = ({ companyId, equipmentId, userId, onAppointmentScheduled }) => {
     const { auth } = useContext(AuthContext);
     const [timeslots, setTimeslots] = useState([]);
     const [selectedTimeslot, setSelectedTimeslot] = useState(null);
+    const [quantity, setQuantity] = useState(1); // Default quantity
 
     useEffect(() => {
         const fetchTimeslots = async () => {
@@ -26,21 +26,20 @@ const AppointmentFormComponent = ({ companyId,equipmentId, userId, onAppointment
     const handleSchedule = async () => {
         if (!selectedTimeslot) {
             alert('Please select a timeslot');
-            //toast.alert('Error scheduling appointment:!');
             return;
         }
 
         try {
             await axios.post(
                 'http://localhost:8080/api/appointments',
-                { equipmentId,  companyId, userId, timeSlotId: selectedTimeslot.id },
+                { equipmentId, companyId, userId, timeSlotId: selectedTimeslot.id, quantity }, // Include quantity in the payload
                 { headers: { Authorization: `Bearer ${auth.token}` } }
             );
             toast.success('Appointment scheduled successfully!');
             onAppointmentScheduled();
         } catch (error) {
             console.error('Error scheduling appointment:', error);
-            toast.error('Error scheduling appointment:!');
+            toast.error('Error scheduling appointment!');
         }
     };
 
@@ -58,6 +57,14 @@ const AppointmentFormComponent = ({ companyId,equipmentId, userId, onAppointment
                     </option>
                 ))}
             </select>
+            <input
+                type="number"
+                min="1"
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                className="form-control mt-2"
+                placeholder="Enter quantity"
+            />
             <button onClick={handleSchedule} className="btn btn-primary mt-2">
                 Schedule Appointment
             </button>

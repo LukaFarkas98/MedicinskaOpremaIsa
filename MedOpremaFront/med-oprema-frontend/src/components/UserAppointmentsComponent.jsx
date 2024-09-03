@@ -30,7 +30,8 @@ const UserAppointmentsComponent = () => {
                         startTime: timeslotResponse.data.startTime,
                         endTime: timeslotResponse.data.endTime,
                         equipment: equipmentResponse.data,
-                        company: companyResponse.data
+                        company: companyResponse.data,
+                        quantity: appointment.quantity // Assuming the quantity is part of the appointment data
                     };
                 }));
                 setAppointments(appointmentData);
@@ -71,6 +72,7 @@ const UserAppointmentsComponent = () => {
                                 <p>Company Name: {appointment.company.companyName}</p>
                                 <p>Equipment Name: {appointment.equipment.equipmentName}</p>
                                 <p>Equipment Type: {appointment.equipment.equipmentType}</p>
+                                <p>Quantity: {appointment.quantity}</p>
                                 <p>Time: {appointment.startTime} - {appointment.endTime}</p>
                             </div>
                             <button onClick={() => handleCancel(appointment.appointmentId)} className="btn btn-danger" disabled={loading}>

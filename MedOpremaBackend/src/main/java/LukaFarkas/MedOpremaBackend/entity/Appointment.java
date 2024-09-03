@@ -27,7 +27,7 @@ public class Appointment {
     private Equipment equipment;
 
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id", referencedColumnName = "company_id",nullable = false)
     private Company company;
 
 
@@ -39,6 +39,7 @@ public class Appointment {
     @JoinColumn(name = "timeslot_id", nullable = false)
     private TimeSlot timeSlot;
 
-
+    @Column(name = "quantity", nullable = false)
+    private Long quantity;
 
 }

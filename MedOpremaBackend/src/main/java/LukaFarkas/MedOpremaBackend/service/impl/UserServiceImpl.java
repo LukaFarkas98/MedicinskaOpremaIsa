@@ -7,10 +7,12 @@ import LukaFarkas.MedOpremaBackend.mapper.UserMapper;
 import LukaFarkas.MedOpremaBackend.repository.UserRepository;
 import LukaFarkas.MedOpremaBackend.service.UserService;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.Role;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
         }
         if (user.getRole() == null) {
             user.setRole(User.UserRole.REGISTERED_USER);
+
         }
         User savedUser = userRepository.save(user);
         return UserMapper.mapToUserDto(savedUser);

@@ -30,6 +30,7 @@ const HeaderComponent = () => {
                 </li>
                 <li><Link className="nav-link" to="/appointments">My Appointments</Link></li>
                 <li><Link className="nav-link" to="/penalpoints">Penal Points</Link></li> {/* New Link */}
+                <li><Link className="nav-link" to="/complaints">Complaints</Link></li>
               </ul>
             </div>
           </div>

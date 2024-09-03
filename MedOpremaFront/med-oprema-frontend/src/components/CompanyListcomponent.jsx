@@ -18,26 +18,27 @@ const CompanyListComponent = () => {
     }, []);
 
     return (
-      <div className="container">
-          <h2 className="my-4">Select a Company</h2>
-          <div className="list-group">
-              {companies.map((company) => (
-                  <button
-                      key={company.id}
-                      className={`list-group-item list-group-item-action ${selectedCompany === company.id ? 'active' : ''}`}
-                      onClick={() => setSelectedCompany(company.id)}
-                  >
-                      {company.companyName}
-                  </button>
-              ))}
-          </div>
+        <div className="container">
+            <h2 className="my-4">Select a Company</h2>
+            <div className="list-group">
+                {companies.map((company) => (
+                    <div key={company.id} className="list-group-item">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <div
+                                className={`list-group-item list-group-item-action ${selectedCompany === company.id ? 'active' : ''}`}
+                                onClick={() => setSelectedCompany(company.id)}
+                            >
+                                {company.companyName}
+                            </div><Link to={`/submit-complaint/${company.id}`} className="btn btn-primary">File Complaint</Link>
 
-          {selectedCompany && <EquipmentListComponent companyId={selectedCompany} />}
-      </div>
-  );
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {selectedCompany && <EquipmentListComponent companyId={selectedCompany} />}
+        </div>
+    );
 };
-
-      
-
 
 export default CompanyListComponent;

@@ -71,6 +71,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             appointment.setUser(UserMapper.mapToUser(userService.getUserById(appointmentDto.getUserId())));
             TimeSlotDto timeSlot1 = timeSlotService.findById(appointmentDto.getTimeSlotId());
             appointment.setTimeSlot(TimeSlotMapper.toEntity(timeSlot1, appointment.getEquipment()));
+            appointment.setQuantity(appointmentDto.getQuantity());
 
             //sacuvamo da je bukiran timeslot taj
             timeSlot.setBooked(true);
@@ -134,9 +135,10 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .map(appointment -> new AppointmentDto(
                         appointment.getAppointment_id(),
                         appointment.getEquipment().getEquipment_id(),
-                        appointment.getCompany().getCompany_id(),
+                        appointment.getCompany().getId(),
                         appointment.getUser().getId(),
-                        appointment.getTimeSlot().getId()
+                        appointment.getTimeSlot().getId(),
+                        appointment.getQuantity()
                       ))
                 .collect(Collectors.toList());
     }

@@ -14,7 +14,7 @@ public class EquipmentMapper {
                 equipment.getEquipment_id(),
                 equipment.getEquipment_name(),
                 equipment.getEquipment_type(),
-                equipment.getCompany().getCompany_id()
+                equipment.getCompany().getId()
         );
     }
 

@@ -4,8 +4,10 @@ import LukaFarkas.MedOpremaBackend.dto.UserDto;
 import LukaFarkas.MedOpremaBackend.repository.UserRepository;
 import LukaFarkas.MedOpremaBackend.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private UserService userService;
     @PostMapping
@@ -26,6 +30,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> RegisterUser(@RequestBody  UserDto userDto){
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         UserDto savedUser = userService.createUser(userDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }

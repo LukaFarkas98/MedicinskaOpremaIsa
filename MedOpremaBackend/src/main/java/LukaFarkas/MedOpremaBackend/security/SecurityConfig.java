@@ -35,23 +35,23 @@ public class SecurityConfig {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
-    @Bean
+    @Bean //OVAJ ISPOD RADI
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 
             http
                     .authorizeRequests()
                     .requestMatchers("/api/penal-points/user/{userId}",
-                            "api/appointments/{appointmentId}",
+                            "/api/appointments/{appointmentId}",
                             "/api/timeslots/{timeSlotId}",
-                            "api/equipment/{id}/timeslots",
-                            "api/appointments",
+                            "/api/equipment/{id}/timeslots",
+                            "/api/appointments",
                             "/api/login",
                             "/api/companies",
-                            "api/users",
-                            "api/companies/{id}/equipment",
+                            "/api/users",
+                            "/api/companies/{id}/equipment",
                             "/api/timeslots",
-                            "/api/appointments/by-appointment/{appointmentId}").permitAll()
+                            "/api/appointments/by-appointment/{appointmentId}", "/api/complaints", "api/complaints").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .csrf().disable()
@@ -61,6 +61,21 @@ public class SecurityConfig {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+  /*  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .requestMatchers("/api/admin/**").hasRole("SYSTEM_ADMIN")
+                .requestMatchers("/api/company-admin/**").hasRole("COMPANY_ADMIN")
+                .requestMatchers("/api/user/**").hasRole("REGISTERED_USER")
+                .requestMatchers("/api/equipment/view").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }*/
+
+
 
    /* @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

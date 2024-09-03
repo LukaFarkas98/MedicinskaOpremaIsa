@@ -12,9 +12,10 @@ public class AppointmentMapper {
         return new AppointmentDto(
                 appointment.getAppointment_id(),
                 appointment.getEquipment().getEquipment_id(),
-                appointment.getCompany().getCompany_id(),
+                appointment.getCompany().getId(),
                 appointment.getUser().getId(),
-                appointment.getTimeSlot().getId()
+                appointment.getTimeSlot().getId(),
+                appointment.getQuantity()
         );
     }
 
@@ -24,7 +25,8 @@ public class AppointmentMapper {
                 equipment,
                 company,
                 user,
-                timeSlot
+                timeSlot,
+                appointmentDto.getQuantity()
         );
     }
 }

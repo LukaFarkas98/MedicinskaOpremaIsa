@@ -1,5 +1,6 @@
 package LukaFarkas.MedOpremaBackend.entity;
 
+import LukaFarkas.MedOpremaBackend.security.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,7 +44,7 @@ public class User {
     private String profession;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     private UserRole role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -20,4 +20,5 @@ public class AppointmentDto {
     private Long companyId;
     private Long userId;
     private Long timeSlotId;
+    private Long quantity;
 }
