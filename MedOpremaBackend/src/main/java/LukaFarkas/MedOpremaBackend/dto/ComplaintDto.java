@@ -18,6 +18,13 @@ public class ComplaintDto {
     private String details;
     private LocalDateTime date;
 
+    private ComplaintType complaintType; // Add this field
+    private String response;
+    public enum ComplaintType {
+        COMPANY,
+        ADMIN
+    }
+
     // Getters and Setters
 }
 

@@ -1,26 +1,28 @@
 package LukaFarkas.MedOpremaBackend.service.impl;
 
 import LukaFarkas.MedOpremaBackend.dto.UserDto;
+import LukaFarkas.MedOpremaBackend.entity.RoleEnum;
 import LukaFarkas.MedOpremaBackend.entity.User;
 import LukaFarkas.MedOpremaBackend.exception.ResourceNotFoundException;
 import LukaFarkas.MedOpremaBackend.mapper.UserMapper;
+import LukaFarkas.MedOpremaBackend.repository.RoleRepository;
 import LukaFarkas.MedOpremaBackend.repository.UserRepository;
 import LukaFarkas.MedOpremaBackend.service.UserService;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.Role;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     private final JdbcTemplate jdbcTemplate;
     private UserRepository userRepository;
@@ -34,10 +36,44 @@ public class UserServiceImpl implements UserService {
         if(userRepository.findByEmail(userDto.getEmail()) != null){
             throw new RuntimeException("Email already exists");
         }
-        if (user.getRole() == null) {
-            user.setRole(User.UserRole.REGISTERED_USER);
 
+        user.setRole(roleRepository.findByName(RoleEnum.USER).orElseThrow(
+                () -> new RuntimeException("Role USER not found")
+        ));
+        User savedUser = userRepository.save(user);
+        return UserMapper.mapToUserDto(savedUser);
+    }
+
+    @Override
+    public UserDto createSuperAdmin(UserDto userDto) {
+        User user = UserMapper.mapToUser(userDto);
+        if (userDto.getEmail() == null || userDto.getPassword() == null) {
+            throw new RuntimeException("Email already exists");
         }
+        if(userRepository.findByEmail(userDto.getEmail()) != null){
+            throw new RuntimeException("Email already exists");
+        }
+
+        user.setRole(roleRepository.findByName(RoleEnum.SUPER_ADMIN).orElseThrow(
+                () -> new RuntimeException("Role USER not found")
+        ));
+        User savedUser = userRepository.save(user);
+        return UserMapper.mapToUserDto(savedUser);
+    }
+
+    @Override
+    public UserDto createAdmin(UserDto userDto) {
+        User user = UserMapper.mapToUser(userDto);
+        if (userDto.getEmail() == null || userDto.getPassword() == null) {
+            throw new RuntimeException("Email already exists");
+        }
+        if(userRepository.findByEmail(userDto.getEmail()) != null){
+            throw new RuntimeException("Email already exists");
+        }
+
+        user.setRole(roleRepository.findByName(RoleEnum.ADMIN).orElseThrow(
+                () -> new RuntimeException("Role USER not found")
+        ));
         User savedUser = userRepository.save(user);
         return UserMapper.mapToUserDto(savedUser);
     }

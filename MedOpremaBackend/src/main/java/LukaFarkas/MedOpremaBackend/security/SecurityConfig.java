@@ -4,27 +4,26 @@ import LukaFarkas.MedOpremaBackend.service.impl.CustomUserDetailsService;
 import LukaFarkas.MedOpremaBackend.util.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
@@ -35,64 +34,40 @@ public class SecurityConfig {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
-    @Bean //OVAJ ISPOD RADI
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-
-            http
-                    .authorizeRequests()
-                    .requestMatchers("/api/penal-points/user/{userId}",
-                            "/api/appointments/{appointmentId}",
-                            "/api/timeslots/{timeSlotId}",
-                            "/api/equipment/{id}/timeslots",
-                            "/api/appointments",
-                            "/api/login",
-                            "/api/companies",
-                            "/api/users",
-                            "/api/companies/{id}/equipment",
-                            "/api/timeslots",
-                            "/api/appointments/by-appointment/{appointmentId}", "/api/complaints", "api/complaints").permitAll()
-                    .anyRequest().authenticated()
-                    .and()
-                    .csrf().disable()
-                    .headers().frameOptions().disable()
-                    .and()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
-  /*  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                .requestMatchers("/api/admin/**").hasRole("SYSTEM_ADMIN")
-                .requestMatchers("/api/company-admin/**").hasRole("COMPANY_ADMIN")
-                .requestMatchers("/api/user/**").hasRole("REGISTERED_USER")
-                .requestMatchers("/api/equipment/view").permitAll()
+                .authorizeHttpRequests()
+                .requestMatchers("/api/verify", "/api/login", "/api/users/register/admin").permitAll()
+                .requestMatchers("/api/companies", "/api/appointments/user/{userId}").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/complaints/respond/**").hasRole("SUPER_ADMIN")  // Ensure SUPER_ADMIN role is correctly specified
+                .requestMatchers(
+                        "/api/penal-points/user/**",
+                        "/api/timeslots/**",
+                        "/api/equipment/**",
+                        "/api/users/**",
+                        "/api/complaints"
+                ).authenticated()
                 .anyRequest().authenticated()
                 .and()
+                .csrf().disable()
+                .headers().frameOptions().disable()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }*/
-
-
-
-   /* @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/**").permitAll()
-                                .anyRequest().authenticated()
-                )
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }*/
+    }
+
+
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("ROLE_SUPER_ADMIN > ROLE_ADMIN > ROLE_USER");
+        return roleHierarchy;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

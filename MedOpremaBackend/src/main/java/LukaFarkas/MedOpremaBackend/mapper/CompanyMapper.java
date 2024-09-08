@@ -4,12 +4,17 @@ import LukaFarkas.MedOpremaBackend.dto.CompanyDto;
 import LukaFarkas.MedOpremaBackend.dto.EquipmentDto;
 import LukaFarkas.MedOpremaBackend.entity.Company;
 import LukaFarkas.MedOpremaBackend.entity.Equipment;
+import LukaFarkas.MedOpremaBackend.entity.User;
+import LukaFarkas.MedOpremaBackend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CompanyMapper {
 
+    @Autowired
+    private static UserRepository userRepository;
     public static CompanyDto toDTO(Company company) {
         if (company == null) {
             return null;
@@ -23,7 +28,8 @@ public class CompanyMapper {
                 company.getId(),
                 company.getCompanyName(),
                 company.getAddress(),
-                equipmentDTOs
+                equipmentDTOs,
+                company.getAdmin().getId()
         );
     }
 
@@ -41,6 +47,11 @@ public class CompanyMapper {
         company.setCompanyName(companyDTO.getCompanyName());
         company.setAddress(companyDTO.getAddress());
         company.setEquipment(equipments);
+        if (companyDTO.getAdminId() != null) {
+            User admin = userRepository.findById(companyDTO.getAdminId())
+                    .orElseThrow(() -> new RuntimeException("Admin not found with ID: " + companyDTO.getAdminId()));
+            company.setAdmin(admin);
+        }
 
         return company;
     }

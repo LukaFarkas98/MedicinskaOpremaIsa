@@ -3,8 +3,8 @@ package LukaFarkas.MedOpremaBackend.service;
 import LukaFarkas.MedOpremaBackend.dto.AppointmentDto;
 import LukaFarkas.MedOpremaBackend.repository.AppointmentRepository;
 import com.google.zxing.WriterException;
+import jakarta.mail.MessagingException;
 
-import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.List;
 

@@ -39,5 +39,8 @@ public class Complaint {
     @Column(nullable = false)
     private LocalDateTime date;
 
+    @Column(nullable = true)
+    private String response;  // Field to store the super admin's response
+
     // Getters and Setters
 }

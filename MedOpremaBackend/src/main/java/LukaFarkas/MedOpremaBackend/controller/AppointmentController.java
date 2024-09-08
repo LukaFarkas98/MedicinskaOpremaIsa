@@ -8,12 +8,14 @@ import LukaFarkas.MedOpremaBackend.entity.TimeSlot;
 import LukaFarkas.MedOpremaBackend.service.AppointmentService;
 import LukaFarkas.MedOpremaBackend.service.EquipmentService;
 import com.google.zxing.WriterException;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,7 @@ public class AppointmentController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(newAppointment);
     }
+
 
     @GetMapping("/by-appointment/{appointmentId}")
     public ResponseEntity<EquipmentDto> getEquipmentDtoByAppointmentId(@PathVariable Long appointmentId) {

@@ -1,67 +1,66 @@
 package LukaFarkas.MedOpremaBackend.service;
 
-import LukaFarkas.MedOpremaBackend.entity.Appointment;
 import LukaFarkas.MedOpremaBackend.entity.User;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import jakarta.mail.internet.MimeMessage;
+import LukaFarkas.MedOpremaBackend.entity.VerificationToken;
+import LukaFarkas.MedOpremaBackend.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.env.Environment;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class EmailService {
 
     @Autowired
-    private JavaMailSender emailSender;
+    VerificationTokenRepository verificationTokenRepository;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
+    /*
+     * Koriscenje klase za ocitavanje vrednosti iz application.properties fajla
+     */
+    @Autowired
+    private Environment env;
 
-    public void sendSimpleMessage(String to, String subject, String text) throws MessagingException, jakarta.mail.MessagingException {
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    /*
+     * Anotacija za oznacavanje asinhronog zadatka
+     * Vise informacija na: https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling
+     */
 
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(text);
+    @Async
+    public void sendEmailResponse(String userEmail, String response) {
+        // Implement the method to send an email using JavaMailSender
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(userEmail);
+        message.setSubject("Your Complaint Response");
+        message.setText(response);
 
-        emailSender.send(message);
+        javaMailSender.send(message);
     }
 
-    public void sendAppointmentConfirmation(User user, Appointment appointment) throws MessagingException, IOException, WriterException, jakarta.mail.MessagingException {
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    @Async
+    public void sendVerificationEmail(User user) throws MailException, InterruptedException {
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken(token, user, LocalDateTime.now().plusHours(24));
+        verificationTokenRepository.save(verificationToken);
 
-        helper.setTo(user.getEmail());
-        helper.setSubject("Appointment Confirmation");
-        helper.setText("Dear " + user.getFirstName() + ",\n\nYour appointment is confirmed. Details are as follows:\n\n" +
-                "Company: " + appointment.getCompany().getCompanyName() + "\n" +
-                "Equipment: " + appointment.getEquipment().getEquipment_name() + "\n" +
-                "Time: " + appointment.getTimeSlot() + "\n\n" +
-                "Please find the QR code attached for your appointment.");
+        String verificationUrl = "http://localhost:8080/api/verify?token=" + token;
 
-        ByteArrayResource qrCode = generateQRCode(appointment);
-        helper.addAttachment("appointment_qr_code.png", qrCode);
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(user.getEmail());
+        mail.setFrom(env.getProperty("spring.mail.username"));
+        mail.setSubject("Complete your registration");
+        mail.setText("Dear " + user.getFirstName() + ",\n\nPlease click the link below to complete your registration:\n" + verificationUrl + "\n\nThe link will expire in 24 hours.");
+        javaMailSender.send(mail);
 
-        emailSender.send(message);
+        System.out.println("Verification email sent!");
     }
 
-    private ByteArrayResource generateQRCode(Appointment appointment) throws WriterException, IOException {
-        String qrText = "Appointment Details:\n" +
-                "Company: " + appointment.getCompany().getCompanyName() + "\n" +
-                "Equipment: " + appointment.getEquipment().getEquipment_name() + "\n" +
-                "Time: " + appointment.getTimeSlot();
 
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
-        MatrixToImageWriter.writeToStream(qrCodeWriter.encode(qrText, BarcodeFormat.QR_CODE, 200, 200), "PNG", pngOutputStream);
-        return new ByteArrayResource(pngOutputStream.toByteArray());
-    }
 }

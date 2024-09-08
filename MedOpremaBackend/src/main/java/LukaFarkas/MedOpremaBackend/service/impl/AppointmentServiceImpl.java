@@ -2,9 +2,7 @@ package LukaFarkas.MedOpremaBackend.service.impl;
 
 import LukaFarkas.MedOpremaBackend.dto.AppointmentDto;
 import LukaFarkas.MedOpremaBackend.dto.TimeSlotDto;
-import LukaFarkas.MedOpremaBackend.dto.UserDto;
 import LukaFarkas.MedOpremaBackend.entity.*;
-import LukaFarkas.MedOpremaBackend.exception.ResourceNotFoundException;
 import LukaFarkas.MedOpremaBackend.mapper.AppointmentMapper;
 import LukaFarkas.MedOpremaBackend.mapper.TimeSlotMapper;
 import LukaFarkas.MedOpremaBackend.mapper.UserMapper;
@@ -15,13 +13,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +47,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
     @Override
-    public AppointmentDto createAppointment(AppointmentDto appointmentDto) throws MessagingException, jakarta.mail.MessagingException, IOException, WriterException {
+    public AppointmentDto createAppointment(AppointmentDto appointmentDto) throws  IOException, WriterException {
 
         Optional<Appointment> existingAppointment = appointmentRepository.findByEquipmentAndTimeSlotAndCompany(
                 appointmentDto.getEquipmentId(), appointmentDto.getTimeSlotId(), appointmentDto.getCompanyId());

@@ -21,8 +21,10 @@ public class Company {
     @Column(name = "company_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "company_name")
     private String companyName;
+
     @Column(name = "address")
     private String address;
 
@@ -31,5 +33,10 @@ public class Company {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<Appointment> appointments;
+
+    // Add the relationship to the User entity for the admin
+    @ManyToOne
+    @JoinColumn(name = "admin_id", nullable = false)
+    private User admin;  // Assuming that User entity exists with an admin role
 
 }

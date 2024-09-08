@@ -4,11 +4,13 @@ import LukaFarkas.MedOpremaBackend.dto.CompanyDto;
 import LukaFarkas.MedOpremaBackend.dto.EquipmentDto;
 import LukaFarkas.MedOpremaBackend.entity.Company;
 import LukaFarkas.MedOpremaBackend.entity.Equipment;
+import LukaFarkas.MedOpremaBackend.entity.User;
 import LukaFarkas.MedOpremaBackend.exception.ResourceNotFoundException;
 import LukaFarkas.MedOpremaBackend.mapper.CompanyMapper;
 import LukaFarkas.MedOpremaBackend.mapper.EquipmentMapper;
 import LukaFarkas.MedOpremaBackend.repository.CompanyRepository;
 import LukaFarkas.MedOpremaBackend.repository.EquipmentRepository;
+import LukaFarkas.MedOpremaBackend.repository.UserRepository;
 import LukaFarkas.MedOpremaBackend.service.CompanyService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ import java.util.stream.Collectors;
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private CompanyRepository companyRepository;
@@ -40,11 +45,17 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional
-    public List<CompanyDto> createCompanies(List<CompanyDto> companyDtos) {
+    public List<CompanyDto> createCompanies(List<CompanyDto> companyDtos, Long adminId) {
         List<Company> savedCompanies = new ArrayList<>();
+
+        // Fetch the admin user
+        User admin = userRepository.findById(adminId).orElseThrow(() -> new RuntimeException("Admin not found"));
 
         for (CompanyDto companyDto : companyDtos) {
             Company company = CompanyMapper.toEntity(companyDto);
+
+            // Set the admin for the company
+            company.setAdmin(admin);
 
             // Detach equipment from the company to avoid detached entity issues
             List<Equipment> equipmentList = company.getEquipment();

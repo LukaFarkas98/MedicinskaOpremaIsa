@@ -15,4 +15,5 @@ public class CompanyDto {
     private String companyName;
     private String address;
     private List<EquipmentDto> equipment;
+    private Long adminId;  // Added this field
 }

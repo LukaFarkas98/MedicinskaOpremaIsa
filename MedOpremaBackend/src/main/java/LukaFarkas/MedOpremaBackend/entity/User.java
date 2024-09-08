@@ -17,12 +17,14 @@ import java.util.List;
 @Table(name = "Users")
 
 public class User {
-    public enum UserRole {
-        ADMIN,
-        REGISTERED_USER,
-        COMPANY_ADMIN,
-        UNREGISTERED_USER
+    public boolean getIsEnabled() {
+        return isEnabled;
     }
+
+    public void setIsEnabled(boolean b) {
+        isEnabled = b;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,10 +45,17 @@ public class User {
     @Column(name = "profession")
     private String profession;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private UserRole role;
+    @Column(name = "userEnabled")
+    private boolean isEnabled = false;
+
+    @OneToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+    private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PenalPoint> penalPoints;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VerificationToken> verificationTokens;
+
 }

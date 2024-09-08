@@ -1,5 +1,6 @@
 package LukaFarkas.MedOpremaBackend.util;
 
+import LukaFarkas.MedOpremaBackend.dto.UserDto;
 import LukaFarkas.MedOpremaBackend.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,6 @@ public class JwtResponse implements Serializable {
 
     private  String token;
 
-    private User user;
+    private UserDto user;
 
 }

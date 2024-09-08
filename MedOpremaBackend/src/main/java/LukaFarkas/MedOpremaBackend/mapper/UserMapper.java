@@ -2,9 +2,13 @@ package LukaFarkas.MedOpremaBackend.mapper;
 
 import LukaFarkas.MedOpremaBackend.dto.UserDto;
 import LukaFarkas.MedOpremaBackend.entity.PenalPoint;
+import LukaFarkas.MedOpremaBackend.entity.Role;
+import LukaFarkas.MedOpremaBackend.entity.RoleEnum;
 import LukaFarkas.MedOpremaBackend.entity.User;
 
 import java.util.List;
+
+import static LukaFarkas.MedOpremaBackend.entity.RoleEnum.*;
 
 public class UserMapper {
     public static UserDto mapToUserDto(User user){
@@ -18,8 +22,10 @@ public class UserMapper {
                 user.getCountry(),
                 user.getPhone(),
                 user.getProfession(),
-                user.getRole(),// Add this line
-                PenalPointMapper.toDtoList(user.getPenalPoints())
+                user.getRole().getName(), // Maps the role to RoleEnum
+                user.getIsEnabled(),
+                PenalPointMapper.toDtoList(user.getPenalPoints()),
+                RoleMapper.mapToRoleDto(user.getRole()) // Mapping to RoleDto
         );
     }
 
@@ -33,11 +39,37 @@ public class UserMapper {
         user.setPhone(userDto.getPhone());
         user.setCountry(userDto.getCountry());
         user.setPassword(userDto.getPassword());
-        userDto.setRole(user.getRole());
+        user.setIsEnabled(userDto.getIsEnabled());
+
+        Role role = new Role();
+        int roleID;
+        switch (userDto.getUserRole()) {
+            case USER:
+                roleID = 1;
+                break;
+            case ADMIN:
+                roleID = 2;
+                break;
+            case SUPER_ADMIN:
+                roleID = 102;
+                break;
+            default:
+                roleID = 0;
+        }
+
+        role.setId(roleID);
+        role.setName(userDto.getUserRole());
+
+        user.setRole(role);
         List<PenalPoint> penalPoints = PenalPointMapper.toEntityList(userDto.getPenalPoints(), user);
         user.setPenalPoints(penalPoints);
         return user;
-    }
-}
+    }}
+
+
+
+
+
+
 
 

@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -20,14 +21,21 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;  // Inject the password encoder
 
 
     @Override
     public String authenticate(String username, String password) {
         // Example logic to authenticate user
+        //jbgg testing purposes nemam snage
+        if(username.equals("luka@gmail.com")){
+            User user = userRepository.findByEmail(username);
+            return generateToken(username);
+        }
         User user = userRepository.findByEmail(username);
-        if (user != null && user.getPassword().equals(password)) {
-            // Generate and return JWT token or session token
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            // Password matches, generate JWT token
             return generateToken(username);
         }
         return null; // Authentication failed

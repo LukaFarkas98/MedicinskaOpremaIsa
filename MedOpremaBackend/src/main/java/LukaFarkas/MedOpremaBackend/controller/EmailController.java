@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.mail.MessagingException;
 import java.io.IOException;
 
 @RestController
@@ -41,7 +40,7 @@ public class EmailController {
     @Autowired
     private TimeSlotServiceImpl timeSlotService;
 
-    @GetMapping("/sendEmail")
+    /*@GetMapping("/sendEmail")
     public String sendEmail(@RequestParam String to, @RequestParam String subject, @RequestParam String text) {
         try {
             emailService.sendSimpleMessage(to, subject, text);
@@ -49,9 +48,9 @@ public class EmailController {
         } catch (MessagingException | jakarta.mail.MessagingException e) {
             return "Error sending email: " + e.getMessage();
         }
-    }
+    }*/
 
-    @PostMapping("/sendAppointmentConfirmation")
+  /*  @PostMapping("/sendAppointmentConfirmation")
     public String sendAppointmentConfirmation(@RequestBody AppointmentDto appointmentDTO) {
         try {
             // Retrieve related entities (Company, Equipment, User) from the database based on IDs
@@ -79,5 +78,5 @@ public class EmailController {
         } catch (WriterException e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 }

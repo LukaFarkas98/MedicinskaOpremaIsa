@@ -37,8 +37,8 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<List<CompanyDto>> createCompanies(@RequestBody List<CompanyDto> companyDtos){
-        List<CompanyDto> savedCompanies = companyService.createCompanies(companyDtos);
+    public ResponseEntity<List<CompanyDto>> createCompanies(@RequestBody List<CompanyDto> companyDtos, Long adminID){
+        List<CompanyDto> savedCompanies = companyService.createCompanies(companyDtos, adminID);
         return new ResponseEntity<>(savedCompanies, HttpStatus.CREATED);
     }
 

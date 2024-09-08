@@ -1,6 +1,7 @@
 package LukaFarkas.MedOpremaBackend.dto;
 
 import LukaFarkas.MedOpremaBackend.entity.PenalPoint;
+import LukaFarkas.MedOpremaBackend.entity.RoleEnum;
 import LukaFarkas.MedOpremaBackend.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,11 @@ public class UserDto {
     private String country;
     private String phone;
     private String profession;
-    private User.UserRole role;
+    private RoleEnum userRole;
+    private boolean isEnabled = false;
     private List<PenalPointDto> penalPoints;
+    private RoleDto role;
+    public boolean getIsEnabled(){
+        return isEnabled;
+    }
 }
