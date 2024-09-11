@@ -9,6 +9,7 @@ const EquipmentListComponent = ({ companyId }) => {
     const [loading, setLoading] = useState(false);
     const [selectedEquipment, setSelectedEquipment] = useState(null);
     const [timeslots, setTimeslots] = useState([]);
+    const [isFetching, setIsFetching] = useState(false);
 
     useEffect(() => {
         const fetchEquipment = async () => {
@@ -16,9 +17,9 @@ const EquipmentListComponent = ({ companyId }) => {
                 setLoading(true);
                 const response = await axios.get(`http://localhost:8080/api/companies/${companyId}/equipment`);
                 setEquipment(response.data);
-                setLoading(false);
             } catch (error) {
                 console.error('Error fetching equipment:', error);
+            } finally {
                 setLoading(false);
             }
         };
@@ -27,32 +28,33 @@ const EquipmentListComponent = ({ companyId }) => {
     }, [companyId]);
 
     const handleSchedule = async (equipmentId) => {
+        if (isFetching) return; // Prevent multiple requests
+        setIsFetching(true);
         try {
-            setLoading(true);
             const response = await axios.get(`http://localhost:8080/api/available/${equipmentId}`);
             const availableTimeslots = response.data.filter(slot => !slot.booked);
             setTimeslots(availableTimeslots);
             setSelectedEquipment(equipmentId);
-            setLoading(false);
         } catch (error) {
             console.error('Error fetching timeslots:', error);
-            setLoading(false);
+        } finally {
+            setIsFetching(false);
         }
     };
 
     const handleAppointmentScheduled = async (equipmentId, userId, timeslotId) => {
         try {
             setLoading(true);
-            await axios.post(
-                'http://localhost:8080/api/appointments',
-                { equipmentId, userId, timeslotId },
-                { headers: { Authorization: `Bearer ${auth.token}` } }
-            );
-            setLoading(false);
+            // await axios.post(
+            //     'http://localhost:8080/api/appointments',
+            //     { equipmentId, userId, timeslotId },
+            //     { headers: { Authorization: `Bearer ${auth.token}` } }
+            // );
             alert('Appointment scheduled successfully');
         } catch (error) {
-            setLoading(false);
             console.error('Error scheduling appointment:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -86,7 +88,7 @@ const EquipmentListComponent = ({ companyId }) => {
                         <AppointmentFormComponent
                             companyId={companyId}
                             equipmentId={selectedEquipment}
-                            userId={auth.user.id}
+                            userId={auth.user ? auth.user.id : null}
                             onAppointmentScheduled={handleAppointmentScheduled}
                             timeslots={timeslots}
                         />

@@ -34,7 +34,7 @@ public class ComplaintController {
                     .body(null);  // Handle exceptions as needed
         }
     }
-
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping
     public ResponseEntity<List<ComplaintDto>> getAllComplaints() {
         List<ComplaintDto> complaints = complaintService.getAllComplaints();
@@ -52,16 +52,18 @@ public class ComplaintController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ComplaintDto> createComplaint(
             @RequestBody ComplaintDto complaintDto) {
         try {
+            ComplaintDto.ComplaintType complaintType = "company".equalsIgnoreCase(complaintDto.getComplaintType().toString()) ? ComplaintDto.ComplaintType.COMPANY : ComplaintDto.ComplaintType.ADMIN;
             ComplaintDto complaintDTO1 = complaintService.createComplaint(
                     complaintDto.getUserId(),
                     complaintDto.getCompanyId(),
                     complaintDto.getAdminId(),
                     complaintDto.getDetails(),
-                    complaintDto.getComplaintType() // Add this parameter
+                    complaintType // Add this parameter
             );
             return ResponseEntity.ok(complaintDTO1);
         } catch (Exception e) {

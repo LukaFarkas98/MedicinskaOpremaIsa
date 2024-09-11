@@ -20,13 +20,13 @@ public class ComplaintMapper {
         dto.setAdminId(complaint.getAdmin()!= null ? complaint.getAdmin().getId() : null);
         dto.setDetails(complaint.getDetails());
         dto.setDate(complaint.getDate());
+        dto.setResponse(complaint.getResponse());
         return dto;
     }
 
     public static Complaint toEntity(ComplaintDto dto) {
         Complaint complaint = new Complaint();
         complaint.setId(dto.getId());
-        // User and Company entities should be set in the service layer, not here
         complaint.setDetails(dto.getDetails());
         complaint.setDate(dto.getDate());
         return complaint;

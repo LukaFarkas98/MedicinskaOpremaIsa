@@ -47,6 +47,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 username = jwtUtil.extractUsername(jwt);
             } catch (ExpiredJwtException e) {
                 logger.warn("JWT token has expired", e);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token has expired");
+                return;
+            } catch (Exception e) {
+                logger.error("JWT token is invalid", e);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token is invalid");
+                return;
             }
         }
 
@@ -63,6 +69,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
+
 
 
 }

@@ -9,6 +9,7 @@ import LukaFarkas.MedOpremaBackend.service.AppointmentService;
 import LukaFarkas.MedOpremaBackend.service.EquipmentService;
 import com.google.zxing.WriterException;
 import jakarta.mail.MessagingException;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +40,19 @@ public class AppointmentController {
     @PostMapping
     public ResponseEntity<AppointmentDto> createAppointment(@RequestBody AppointmentDto appointmentDTO) throws MessagingException, jakarta.mail.MessagingException, IOException, WriterException {
         // Check if any appointment exists for this equipment at the given time slot in the company
-        AppointmentDto newAppointment = appointmentService.createAppointment(appointmentDTO);
-
-        if (newAppointment == null) {
-            throw new IllegalStateException("Yo, this time slot is already booked for this equipment in the company.");
+        if (appointmentDTO.getEquipmentId() == null || appointmentDTO.getTimeSlotId() == null) {
+            throw new IllegalArgumentException("Equipment ID or Timeslot ID cannot be null.");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(newAppointment);
+        try {
+            AppointmentDto newAppointment = appointmentService.createAppointment(appointmentDTO);
+
+            if (newAppointment == null) {
+                throw new IllegalStateException("Yo, this time slot is already booked for this equipment in the company.");
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(newAppointment);
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
     }
 
 

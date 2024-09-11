@@ -12,7 +12,7 @@ const LoginComponent = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/login', { "email":"luka@gmail.com", "username":email, password:"penzija" });
+      const response = await axios.post('http://localhost:8080/api/login', { "email":"isasestica@gmail.com", "username":email, password:"123" });
       login(response.data.token, response.data.user);
       axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
       navigate('/'); 

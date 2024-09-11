@@ -38,19 +38,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests()
-                .requestMatchers("/api/verify", "/api/login", "/api/users/register/admin").permitAll()
-                .requestMatchers("/api/companies", "/api/appointments/user/{userId}").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/complaints/respond/**").hasRole("SUPER_ADMIN")  // Ensure SUPER_ADMIN role is correctly specified
-                .requestMatchers(
-                        "/api/penal-points/user/**",
-                        "/api/timeslots/**",
-                        "/api/equipment/**",
-                        "/api/users/**",
-                        "/api/complaints"
-                ).authenticated()
+                .requestMatchers("/api/verify", "/api/login", "/api/users/register", "/api/companies").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/complaints/respond/**").hasRole("SUPER_ADMIN")
+                .requestMatchers("api/complaints", "/api/users/{userId}").hasRole("SUPER_ADMIN")
+                .requestMatchers("/api/complaints/create").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
+                .cors()  // Enable CORS in security configuration
+                .and()
                 .headers().frameOptions().disable()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -58,15 +54,6 @@ public class SecurityConfig {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-
-
-    @Bean
-    public RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("ROLE_SUPER_ADMIN > ROLE_ADMIN > ROLE_USER");
-        return roleHierarchy;
     }
 
     @Bean

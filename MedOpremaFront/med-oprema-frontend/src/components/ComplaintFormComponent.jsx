@@ -16,12 +16,13 @@ const ComplaintForm = () => {
         e.preventDefault();
         try {
             const res = await axios.post(
-                'http://localhost:8080/api/complaints',
+                'http://localhost:8080/api/complaints/create',
                 {
                     userId: auth.user.id,
-                    companyId: complaintType === 'company' ? companyId : null,
-                    adminId: complaintType === 'admin' ? companyId : null,
+                    companyId: complaintType.toUpperCase() === 'COMPANY' ? companyId : null,
+                    adminId: complaintType.toUpperCase() === 'ADMIN' ? companyId : null,
                     details: details,
+                    complaintType: complaintType.toUpperCase(),
                 },
                 {
                     headers: {
@@ -51,8 +52,8 @@ const ComplaintForm = () => {
                                 value={complaintType}
                                 onChange={(e) => setComplaintType(e.target.value)}
                             >
-                                <option value="company">Company</option>
-                                <option value="admin">Admin</option>
+                                <option value="COMPANY">COMPANY</option>
+                                <option value="ADMIN">ADMIN</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="formDetails">
@@ -73,6 +74,7 @@ const ComplaintForm = () => {
                         <Alert variant="success" className="mt-4">
                             <h4>Complaint Submitted</h4>
                             <p>Complaint ID: {response.id}</p>
+                            <p>Complaint Type: {response.complaintType}</p> {/* Display complaintType */}
                         </Alert>
                     )}
                     {error && (

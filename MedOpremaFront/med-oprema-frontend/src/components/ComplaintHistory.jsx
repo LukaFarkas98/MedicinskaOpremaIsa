@@ -12,7 +12,7 @@ const ComplaintHistory = () => {
     useEffect(() => {
         const fetchComplaints = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/complaints', {
+                const response = await axios.get(`http://localhost:8080/api/complaints/user/${auth.user.id}`, {
                     headers: {
                         Authorization: `Bearer ${auth.token}`
                     }
@@ -54,20 +54,25 @@ const ComplaintHistory = () => {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>User ID</th>
                         <th>Complaint Type</th>
                         <th>Details</th>
                         <th>Date</th>
+                        <th>Response</th> {/* New column */}
                     </tr>
                 </thead>
                 <tbody>
                     {complaints.map((complaint) => (
-                        <tr key={complaint.id}>
+                        <tr 
+                        key={complaint.id}
+                        style={{
+                            backgroundColor: complaint.response && complaint.response.trim() !== '' ? '#d4edda' : 'inherit' // Check if response is not empty or null
+                        }}
+                        >
                             <td>{complaint.id}</td>
-                            <td>{complaint.userId}</td>
                             <td>{complaint.companyId ? 'Company' : 'Admin'}</td>
                             <td>{complaint.details}</td>
                             <td>{new Date(complaint.createdAt).toLocaleString()}</td>
+                            <td>{complaint.response || 'No response yet'}</td> {/* Display response if available */}
                         </tr>
                     ))}
                 </tbody>

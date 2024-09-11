@@ -1,0 +1,26 @@
+{
+	"info": {
+		"_postman_id": "73f2a626-c49e-461c-a934-c53aff777308",
+		"name": "user2 concurrent testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "33506254"
+	},
+	"item": [
+		{
+			"name": "login user 2",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "apppointment schedule user 2",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

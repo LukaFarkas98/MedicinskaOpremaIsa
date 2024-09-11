@@ -56,7 +56,7 @@ public class EmailService {
         mail.setTo(user.getEmail());
         mail.setFrom(env.getProperty("spring.mail.username"));
         mail.setSubject("Complete your registration");
-        mail.setText("Dear " + user.getFirstName() + ",\n\nPlease click the link below to complete your registration:\n" + verificationUrl + "\n\nThe link will expire in 24 hours.");
+        mail.setText("Dear " + user.getEmail().split("@")[0] + ",\n\nPlease click the link below to complete your registration:\n" + verificationUrl + "\n\nThe link will expire in 24 hours.");
         javaMailSender.send(mail);
 
         System.out.println("Verification email sent!");

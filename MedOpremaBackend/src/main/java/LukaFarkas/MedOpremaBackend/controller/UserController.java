@@ -71,9 +71,11 @@ public class UserController {
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
         UserDto foundUSer = userService.getUserById(userId);
+
         return new ResponseEntity<>(foundUSer, HttpStatus.OK);
 
     }

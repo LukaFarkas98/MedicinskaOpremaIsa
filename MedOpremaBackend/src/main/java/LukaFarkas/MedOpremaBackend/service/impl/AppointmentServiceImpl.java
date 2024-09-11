@@ -46,6 +46,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private TimeSlotRepository timeSlotRepository;
 
 
+    @Transactional
     @Override
     public AppointmentDto createAppointment(AppointmentDto appointmentDto) throws  IOException, WriterException {
 
@@ -74,7 +75,8 @@ public class AppointmentServiceImpl implements AppointmentService {
             timeSlotRepository.save(timeSlot);
            // Appointment appointment = new Appointment(id, equipment, company, user, TimeSlotMapper.toEntity(timeSlot, equipment));
             //sacuvaj appointment u bazu i vrati ga natrag
-            return AppointmentMapper.toDto(appointmentRepository.save(appointment));
+            appointmentRepository.save(appointment);
+            return AppointmentMapper.toDto(appointment);
         }
 
     }

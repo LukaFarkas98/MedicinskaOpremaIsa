@@ -1,0 +1,78 @@
+{
+	"info": {
+		"_postman_id": "9ef35855-30b4-4837-9af4-0b267e845e07",
+		"name": "user1 concurrent testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "33506254"
+	},
+	"item": [
+		{
+			"name": "login user1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the JSON response body\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"// Check if token and userDto exist in the response\r",
+							"if (jsonData.jwt && jsonData.userDto && jsonData.userDto.id) {\r",
+							"    // Set the token as an environment variable\r",
+							"    pm.environment.set(\"token\", jsonData.jwt);\r",
+							"\r",
+							"    // Set the userId as an environment variable\r",
+							"    pm.environment.set(\"userId\", jsonData.userDto.id);\r",
+							"\r",
+							"    console.log(\"Token and User ID have been saved as environment variables.\");\r",
+							"} else {\r",
+							"    console.log(\"Token or User ID not found in the response.\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"isasestica@gmail.com\",\r\n    \"password\":\"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/api/login"
+			},
+			"response": []
+		},
+		{
+			"name": "appointment schedule user1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpc2FzZXN0aWNhQGdtYWlsLmNvbSIsImlhdCI6MTcyNjA4MDEwNiwiZXhwIjoxNzI2MTE2MTA2fQ.eIC_Z_sSiBFl2bAnuaUhEgTH6wbNp4uUr2lYEK5HuBE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"equipmentId\": 34,\r\n  \"companyId\": 14,\r\n  \"userId\": 57,\r\n  \"timeSlotId\": 127,\r\n  \"quantity\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/api/appointments"
+			},
+			"response": []
+		}
+	]
+}

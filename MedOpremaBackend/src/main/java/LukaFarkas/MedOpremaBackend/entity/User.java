@@ -1,6 +1,5 @@
 package LukaFarkas.MedOpremaBackend.entity;
 
-import LukaFarkas.MedOpremaBackend.security.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -55,7 +54,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PenalPoint> penalPoints;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) // Added orphanRemoval and cascade
     private List<VerificationToken> verificationTokens;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Complaint> complaints;
 
 }

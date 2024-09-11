@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Run Newman for User 1
+newman run your-collection.json -e user1-env.json --reporters cli &
+
+# Run Newman for User 2
+newman run your-collection.json -e user2-env.json --reporters cli &
+
+# Wait for both commands to complete
+wait

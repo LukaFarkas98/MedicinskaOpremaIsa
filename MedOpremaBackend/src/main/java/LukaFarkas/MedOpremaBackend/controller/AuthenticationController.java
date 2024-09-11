@@ -42,20 +42,37 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        int a = 1 + 2;
+        // Fetch user by email
+        User user = userRepository.findByEmail(authenticationRequest.getEmail());
+
+        // If user does not exist or is not enabled, return unauthorized or forbidden
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        }
+
+        if (!user.getIsEnabled()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User account is not verified");
+        }
+
+        // Authenticate user and generate token
         String token = authService.authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
-        if (token != null) {
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
-            final String jwt = JwtUtil.generateToken(userDetails);
-
-            User user = userRepository.findByEmail(authenticationRequest.getEmail());
-            UserDto userDto = UserMapper.mapToUserDto(user);
-            return ResponseEntity.ok(new JwtResponse(jwt, userDto));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        // If authentication fails, return unauthorized
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
+
+        // Load user details and generate JWT
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+        final String jwt = JwtUtil.generateToken(userDetails);
+
+        // Map user to UserDto
+        UserDto userDto = UserMapper.mapToUserDto(user);
+
+        // Return the JWT and user details
+        return ResponseEntity.ok(new JwtResponse(jwt, userDto));
     }
+
 
     @GetMapping("/verify")
     public ResponseEntity<String> verifyAccount(@RequestParam String token) {
